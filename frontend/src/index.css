@@ -21,6 +21,6 @@
   animation: gradient 3s ease infinite;
 }
 
-.about{
+.about , .profile-section{
     box-shadow: rgb(247, 246, 246, 0.521) 0px 1px 3px 0px, rgba(255, 255, 255, 0.521) 0px 0px 0px 1px;
 }
