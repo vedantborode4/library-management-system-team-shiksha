@@ -1,1 +1,26 @@
 @import "tailwindcss";
+
+*{
+    font-family: monospace;
+}
+
+.navbar {
+   box-shadow: rgba(143, 143, 143, 0.12) 0px 2px 4px 0px, rgba(148, 148, 148, 0.32) 0px 2px 16px 0px;
+}
+
+@keyframes gradient {
+  0%, 100% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+}
+
+.animate-gradient {
+  animation: gradient 3s ease infinite;
+}
+
+.about{
+    box-shadow: rgb(247, 246, 246, 0.521) 0px 1px 3px 0px, rgba(255, 255, 255, 0.521) 0px 0px 0px 1px;
+}
