@@ -105,7 +105,7 @@ export const modifyBookSchema = z.object({
 
     category: z
         .string()
-        .uuid("Invalid category ID")
+        .min(3)
         .optional(),
 
     condition: z
