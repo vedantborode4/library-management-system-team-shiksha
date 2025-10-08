@@ -119,3 +119,23 @@ export const modifyBookSchema = z.object({
         .max(100)
         .optional(),
 })
+
+export const createGroupSchema = z.object({
+    name: z
+        .string()
+        .min(3, "Group name must be at least 3 characters")
+        .max(50, "Group name must be at most 50 characters"),
+
+    members: z
+        .array(
+            z
+            .string()
+            .min(3, "Username must be at least 3 characters")
+            .max(52, "Username must be at most 52 characters")
+        )
+        .min(3, "Group must have at least 3 members")
+        .max(6, "Group cannot have more than 6 members")
+        .refine((usernames) => new Set(usernames).size === usernames.length, {
+        message: "Usernames must be unique"
+        })
+})
