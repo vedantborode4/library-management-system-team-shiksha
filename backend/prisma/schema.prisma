@@ -42,3 +42,23 @@ model Group {
   members       GroupMember[]
   createdAt     DateTime         @default(now())
 }
+
+model Book {
+  id              String         @id @default(uuid())
+  isbn            String         @unique
+  title           String
+  author          String?
+  price           Float
+  categoryId      String
+  category        Category       @relation(fields: [categoryId], references: [id])
+  totalCopies     Int            @default(3)
+  availableCopies Int            @default(3)
+  condition       String         @default("good")
+  createdAt       DateTime       @default(now())
+}
+
+model Category {
+  id        String   @id @default(uuid())
+  name      String   @unique
+  books     Book[]
+}
