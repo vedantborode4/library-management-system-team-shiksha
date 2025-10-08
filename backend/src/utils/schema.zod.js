@@ -45,3 +45,77 @@ export const userSigninSchema = z.object({
         "Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character"
         )
 })
+
+export const addBookSchema = z.object({
+    isbn: z
+        .string()
+        .min(10, "ISBN must be at least 10 characters"),
+
+    title: z
+        .string()
+        .min(1, "Title is required"),
+
+    author: z
+        .string()
+        .optional(),
+
+    price: z
+        .number()
+        .positive("Price must be a positive number"),
+
+    categoryId: z
+        .string()
+        .min(3),
+
+    totalCopies: z
+        .number()
+        .int()
+        .min(1)
+        .max(100)
+        .optional(),
+
+    condition: z
+        .enum(["good", "new", "fair", "poor"])
+        .optional()
+})
+
+export const removeBookSchema = z.object({
+    isbn: z
+        .string()
+        .min(10, "ISBN is required"),
+});
+
+export const modifyBookSchema = z.object({
+    isbn: z
+        .string()
+        .min(10, "ISBN is required"),
+
+    title: z
+        .string()
+        .optional(),
+
+    author: z
+        .string()
+        .optional(),
+
+    price: z
+        .number()
+        .positive()
+        .optional(),
+
+    categoryId: z
+        .string()
+        .uuid("Invalid category ID")
+        .optional(),
+
+    condition: z
+        .enum(["good", "new", "fair", "poor"])
+        .optional(),
+
+    totalCopies: z
+        .number()
+        .int()
+        .min(1)
+        .max(100)
+        .optional(),
+})
