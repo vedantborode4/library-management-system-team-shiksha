@@ -24,6 +24,7 @@ model User {
   createdAt     DateTime         @default(now())
   updatedAt     DateTime         @updatedAt
   groupMember   GroupMember[]
+  borrow        Borrowing[]
 }
 
 model GroupMember {
@@ -42,6 +43,7 @@ model Group {
   name          String
   members       GroupMember[]
   createdAt     DateTime         @default(now())
+  borrow        Borrowing[]
 }
 
 model Book {
@@ -56,6 +58,7 @@ model Book {
   availableCopies Int            @default(3)
   condition       String         @default("good")
   createdAt       DateTime       @default(now())
+  borrowings      Borrowing[]
 }
 
 model Category {
@@ -67,4 +70,37 @@ model Category {
 enum UserRole {
   USER
   ADMIN
+}
+
+model Borrowing {
+  id              String          @id @default(uuid())
+  bookId          String
+  userId          String?  
+  groupId         String?  
+  borrowDate      DateTime        @default(now())
+  dueDate         DateTime
+  returnDate      DateTime?
+  isReturned      Boolean         @default(false)
+  damageLevel     DamageLevel? 
+  book            Book            @relation(fields: [bookId], references: [id])
+  user            User?           @relation(fields: [userId], references: [id])
+  group           Group?          @relation(fields: [groupId], references: [id])
+  fine            Fine?           @relation("BorrowingToFine")
+}
+
+enum DamageLevel {
+  SMALL
+  LARGE
+  NONE
+}
+
+model Fine {
+  id              String            @id @default(uuid())
+  borrowingId     String            @unique
+  totalAmount     Float
+  missingBook     Boolean           @default(false)
+  lateDays        Int               @default(0)
+  damageLevel     DamageLevel?
+  createdAt       DateTime          @default(now())
+  borrowing       Borrowing         @relation("BorrowingToFine", fields: [borrowingId], references: [id])
 }
