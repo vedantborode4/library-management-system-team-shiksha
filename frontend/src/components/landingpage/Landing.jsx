@@ -55,7 +55,7 @@ const Landing = () => {
                   </div>
 
                   <div className="flex flex-col sm:flex-row gap-3 w-full sm:w-auto">
-                    <button className="bg-blue-500 rounded-2xl px-4 py-3 active:scale-[1.1] duration-[0.2s] hover:bg-blue-400 cursor-pointer text-sm sm:text-base">Browse Books</button>
+                    <a href='/dashboard' className="bg-blue-500 flex justify-center rounded-2xl px-4 py-3 active:scale-[1.1] duration-[0.2s] hover:bg-blue-400 cursor-pointer text-sm sm:text-base">Browse Books</a>
                     <button className="bg-zinc-600 rounded-2xl px-4 py-3 active:scale-[1.1] duration-[0.2s] hover:bg-zinc-500 cursor-pointer text-sm sm:text-base">Learn More</button>
                   </div>
             </div>
