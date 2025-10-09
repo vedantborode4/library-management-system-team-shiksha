@@ -139,3 +139,31 @@ export const createGroupSchema = z.object({
         message: "Usernames must be unique"
         })
 })
+
+
+export const individualBorrowSchema = z.object({
+    userId: z
+        .string()
+        .uuid("Invalid user ID format"),
+    bookId: z
+        .string()
+        .uuid("Invalid book ID format")
+})
+
+export const groupBorrowSchema = z.object({
+    groupId: z
+        .string()
+        .uuid("Invalid group ID format"),
+    bookId: z
+        .string()
+        .uuid("Invalid book ID format")
+})
+
+export const returnBookSchema = z.object({
+    borrowingId: z
+        .string()
+        .uuid("Invalid borrowing ID"),
+    damageLevel: z
+        .enum(["SMALL", "LARGE", "NONE"])
+        .optional()
+})
