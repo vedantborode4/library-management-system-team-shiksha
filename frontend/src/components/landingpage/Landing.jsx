@@ -31,7 +31,7 @@ const Landing = () => {
 
   return (
 
-<div className="bg-zinc-950 w-full min-h-screen text-white flex flex-col items-center justify-between">
+<div className="bg-zinc-950 select-none w-full min-h-screen text-white flex flex-col items-center justify-between">
      
              <div className="navbar w-full h-12 flex items-center justify-between px-6">
                 <div className="heading text-2xl tracking-tighter cursor-default">Libris</div>
@@ -55,7 +55,7 @@ const Landing = () => {
                   </div>
 
                   <div className="flex flex-col sm:flex-row gap-3 w-full sm:w-auto">
-                    <button className="bg-blue-500 rounded-2xl px-4 py-3 active:scale-[1.1] duration-[0.2s] hover:bg-blue-400 cursor-pointer text-sm sm:text-base">Browse Books</button>
+                    <a href='/dashboard' className="bg-blue-500 flex justify-center rounded-2xl px-4 py-3 active:scale-[1.1] duration-[0.2s] hover:bg-blue-400 cursor-pointer text-sm sm:text-base">Browse Books</a>
                     <button className="bg-zinc-600 rounded-2xl px-4 py-3 active:scale-[1.1] duration-[0.2s] hover:bg-zinc-500 cursor-pointer text-sm sm:text-base">Learn More</button>
                   </div>
             </div>
@@ -67,7 +67,7 @@ const Landing = () => {
                 
             </div>
 
-            <div className="about-card fixed sm:absolute left-1/2 sm:left-[3.5vw] top-1/2 sm:top-[66vh] -translate-x-1/2 sm:translate-x-0 -translate-y-1/2 sm:translate-y-0 w-[90%] max-w-[400px] sm:w-auto sm:max-w-none z-30">
+            <div className="about-card fixed sm:absolute left-1/2 sm:left-[7vw] xl:left-[3.5vw] top-1/2 sm:top-[60vh] -translate-x-1/2 sm:translate-x-0 -translate-y-1/2 sm:translate-y-0 w-[90%] max-w-[400px] sm:w-auto sm:max-w-none z-30">
               {
                 about ?
                   <div className="about w-full sm:w-90 px-4 sm:px-5 py-3 rounded-2xl flex flex-col gap-3 sm:gap-4 bg-zinc-900 sm:bg-transparent">
@@ -106,7 +106,7 @@ const Landing = () => {
               }
             </div>
      
-    </div>
+</div>
     
   )
 }
