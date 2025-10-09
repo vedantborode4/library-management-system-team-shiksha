@@ -282,7 +282,6 @@ const Available = () => {
                     <h1 class="quantity text-[13px] tracking-tighter font-medium text-white">quantity</h1>
                   </div>
               </div>
-            
               <div class="card w-[100%] sm:w-[250px] flex flex-col gap-3 p-3 h-auto rounded-[7px] bg-zinc-700">
                   <img src="" alt="" class="w-full rounded-[7px] h-45 bg-zinc-500 object-cover" />
                   <div>
