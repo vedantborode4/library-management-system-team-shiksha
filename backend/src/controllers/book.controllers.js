@@ -39,15 +39,16 @@ export async function addBook(req, res){
 
         if (!existingCategory) {
             existingCategory = await prismaClient.category.create({
-            data: { 
-                name: parsedData.data.category
-            }
-        })
+                data: { 
+                    name: parsedData.data.category
+                }
+            })
+        }
         const categoryId = existingCategory.id
 
         const existingisbn = await prismaClient.book.findUnique({
             where: { 
-                name: parsedData.data.isbn
+                isbn: parsedData.data.isbn
             }
         })
 
@@ -75,7 +76,8 @@ export async function addBook(req, res){
 
     }
 
-    } catch (error) {
+     catch (error) {
+        console.error(error)
         res.status(403)
         .json({
             message: "Internal server error, Please try again",
@@ -107,7 +109,7 @@ export async function removeBook(req, res){
 
     try {
 
-        const book = await prisma.book.findUnique({
+        const book = await prismaClient.book.findUnique({
             where: { isbn: isbn }
         })
 
@@ -123,7 +125,7 @@ export async function removeBook(req, res){
             })
         }
 
-        await prisma.book.delete({ where: { id: book.id } })
+        await prismaClient.book.delete({ where: { id: book.id } })
 
         res.status(200).json({
             message:  "book deleted succesfully"
@@ -140,82 +142,84 @@ export async function removeBook(req, res){
 }
 
 
-export async function modifyBook(req, res){
-    
-    const parsedData = modifyBookSchema.safeParse(req.body)
+export async function modifyBook(req, res) {
+  const parsedData = modifyBookSchema.safeParse(req.body);
 
-    if(!parsedData.success){
-        return res.status(401).json({
-            message: parsedData.error.format()
-        })
+  if (!parsedData.success) {
+    return res.status(401).json({
+      message: parsedData.error.format()
+    })
+  }
+
+  try {
+    const { isbn } = parsedData.data;
+
+    const book = await prismaClient.book.findUnique({
+      where: { isbn }
+    });
+
+    if (!book) {
+      return res.status(404).json({ message: "Book not found" });
     }
 
-    try {
-        const book = await prisma.book.findUnique({
-            where: { isbn: parsedData.data.isbn }
-        })
+    const updateData = {};
 
-        if (!book) {
-            return res.status(403).json({
-                message: "Book not found"
-            })
-        }
+    if (parsedData.data.title !== undefined) updateData.title = parsedData.data.title;
+    if (parsedData.data.author !== undefined) updateData.author = parsedData.data.author;
+    if (parsedData.data.price !== undefined) updateData.price = parsedData.data.price;
+    if (parsedData.data.condition !== undefined) updateData.condition = parsedData.data.condition;
 
-        const updateData = {}
+    if (parsedData.data.category !== undefined) {
+      let category = await prismaClient.category.findUnique({
+        where: { name: parsedData.data.category }
+      });
 
-        if (title !== undefined) updateData.title = parsedData.data.title;
-        if (author !== undefined) updateData.author = parsedData.data.author;
-        if (price !== undefined) updateData.price = parsedData.data.price;
-        if (categoryId !== undefined) {
-            let existingCategory = await prismaClient.category.findUnique({
-                where: { 
-                    name: parsedData.data.category 
-                }
-            })
+      if (!category) {
+        category = await prismaClient.category.create({
+          data: { name: parsedData.data.category }
+        });
+      }
 
-            if (!existingCategory) {
-                existingCategory = await prismaClient.category.create({
-                    data: { 
-                        name: parsedData.data.category
-                    }
-                })
-                
-                const categoryId = existingCategory.id
-            
-                updateData.categoryId = categoryId;
-            }
-        }
-        if (condition !== undefined) updateData.condition = parsedData.data.condition;
+      updateData.categoryId = category.id;
+    }
 
-        if (totalCopies !== undefined) {
-            const scope = totalCopies - book.totalCopies;
+    if (parsedData.data.totalCopies !== undefined) {
+      const scope = parsedData.data.totalCopies - book.totalCopies;
 
-            if (scope < 0 && book.availableCopies < Math.abs(scope)) {
-                return res.status(400).json({
-                message: `Cannot reduce total copies below current available copies (${book.availableCopies})`
-                });
-            }
+      if (scope < 0 && book.availableCopies < Math.abs(scope)) {
+        return res.status(400).json({
+          message: `Cannot reduce total copies below current available copies (${book.availableCopies})`
+        });
+      }
 
-            updateData.totalCopies = parsedData.data.totalCopies;
-            updateData.availableCopies = book.availableCopies + scope;
-        }
+      updateData.totalCopies = parsedData.data.totalCopies;
+      updateData.availableCopies = book.availableCopies + scope;
+    }
 
-        const updatedBook = await prisma.book.update({
-            where: { isbn },
-            data: updateData,
-        })
+    console.log("Update data being sent to Prisma:", updateData);
 
-        return res.status(200).json({
-            message: "Book updated successfully",
-            data: updatedBook
-        })        
-        
+    if (Object.keys(updateData).length === 0) {
+      return res.status(400).json({
+        message: "No valid fields provided to update."
+      });
+    }
+
+    const updatedBook = await prismaClient.book.update({
+      where: { id: book.id }, // ✅ safer than isbn
+      data: updateData,
+    })
+
+    return res.status(200).json({
+      message: "Book updated successfully",
+      data: updatedBook
+    })
+
     } 
     catch (error) {
         res.status(403)
         .json({
-            message: "Internal server error, Please try again",
-            error: error
+        message: "Internal server error, Please try again",
+        error: error
         })
-    }
+  }
 }
