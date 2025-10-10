@@ -135,16 +135,13 @@ export const createGroupSchema = z.object({
         )
         .min(3, "Group must have at least 3 members")
         .max(6, "Group cannot have more than 6 members")
-        .refine((usernames) => new Set(usernames).size === usernames.length, {
+        .refine((userId) => new Set(userId).size === userId.length, {
         message: "Usernames must be unique"
         })
 })
 
 
 export const individualBorrowSchema = z.object({
-    userId: z
-        .string()
-        .uuid("Invalid user ID format"),
     bookId: z
         .string()
         .uuid("Invalid book ID format")
