@@ -15,7 +15,7 @@ export async function createGroup (req, res) {
     const {name , members} = parsedData.data
 
     try {
-        const existingGroup = await prismaClient.group.findUnique({
+        const existingGroup = await prismaClient.group.findFirst({
             where: {
                 name:  name
             }
@@ -37,7 +37,7 @@ export async function createGroup (req, res) {
         const foundUsernames = foundUsers.map((user) => user.username)
 
         const missingUsernames = members.filter(
-            (username) => !foundUsernames.includes(username)
+            (userId) => !foundUsernames.includes(userId)
         )
 
         if (missingUsernames.length > 0) {
@@ -56,10 +56,11 @@ export async function createGroup (req, res) {
             groupId: group.id
         }))
 
-        await prismaClient.groupMember.createMany({
-            data: groupMemberData
-        })
-
+        await Promise.all(
+            groupMemberData.map((data) => 
+                prismaClient.groupMember.createMany({ data })
+            )
+        )
         return res.status(200).json({
             message: "Group created successfully",
             groupId: group.id,
@@ -67,10 +68,14 @@ export async function createGroup (req, res) {
         })
         
     } catch (error) {
-        res.status(403)
-        .json({
-            message: "Internal server error, Please try again",
-            error: error
-        })
+    console.error("🔥 PrismaClientInitializationError:", error);
+    return res.status(500).json({
+        message: "Internal server error, Please try again",
+        error: {
+            name: error.name,
+            message: error.message,
+            stack: error.stack
+        }
+    });
     }
 }
