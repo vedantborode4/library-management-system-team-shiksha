@@ -3,7 +3,7 @@ import Landing from "./components/landingpage/Landing"
 import Dashboard from "./components/dashboard/Dashboard"
 import Available from "./components/dashboard/Available"
 import Borrowed from "./components/dashboard/Borrowed"
-import Feedback from "./components/dashboard/Feedback"
+import Return from "./components/dashboard/Return"
 
 const App = () => {
   return (
@@ -14,7 +14,7 @@ const App = () => {
       <Route path="/dashboard" element={<Dashboard />}> 
         <Route index element={<Available></Available>} /> {/* index route - shows by default when visiting /dashboard */}
         <Route path="borrowed" element={<Borrowed></Borrowed>} />
-        <Route path="feedback" element={<Feedback></Feedback>} />
+        <Route path="Return" element={<Return></Return>} />
       </Route>
 
     </Routes>
